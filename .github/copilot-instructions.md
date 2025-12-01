@@ -68,3 +68,7 @@ Current roadmap priority:
 5. Phase 5: Candidate UI (floating window)
 
 See `Docs/Spec.md` for complete specification.
+
+## Notes
+
+- If you generate git commit messages, please write them in English and use gitmoji style.

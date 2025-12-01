@@ -1,0 +1,38 @@
+# Zig
+zig-cache/
+zig-out/
+.zig-cache/
+
+# Rust
+target/
+Cargo.lock
+
+# Build artifacts
+*.dll
+*.exe
+*.pdb
+*.lib
+*.obj
+*.o
+*.a
+*.so
+*.dylib
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp

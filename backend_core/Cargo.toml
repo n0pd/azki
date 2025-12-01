@@ -1,0 +1,23 @@
+[package]
+name = "backend_core"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+# 非同期ランタイム (IPCサーバー用)
+tokio = { version = "1", features = ["full"] }
+
+# Windows API (パイプ, UI用)
+windows = { version = "0.58", features = [
+    "Win32_System_Pipes",
+    "Win32_System_IO",
+    "Win32_Foundation",
+    "Win32_Security",
+    "Win32_UI_WindowsAndMessaging",
+] }
+
+# 文字コード変換 (SKK辞書用)
+encoding_rs = "0.8"
+
+# ログ出力
+anyhow = "1.0"
