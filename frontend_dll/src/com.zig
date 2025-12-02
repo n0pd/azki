@@ -100,21 +100,21 @@ pub const ClassFactory = struct {
     /// IUnknown::AddRef
     fn addRef(this: **const VTable) callconv(w.WINAPI) u32 {
         const self = getSelf(this);
-        self.ref_count += 1;
-        return self.ref_count;
+        const prev = @atomicRmw(u32, &self.ref_count, .Add, 1, .seq_cst);
+        return prev + 1;
     }
 
     /// IUnknown::Release
     pub fn release(this: **const VTable) callconv(w.WINAPI) u32 {
         const self = getSelf(this);
-
+        const prev = @atomicRmw(u32, &self.ref_count, .Sub, 1, .seq_cst);
+        
         // Prevent underflow - debug assertion for double-release bugs
-        if (self.ref_count == 0) {
+        if (prev == 0) {
             @panic("ClassFactory::Release called with ref_count == 0 (double release)");
         }
 
-        self.ref_count -= 1;
-        const count = self.ref_count;
+        const count = prev - 1;
         if (count == 0) {
             std.heap.page_allocator.destroy(self);
             globals.dllRelease();
