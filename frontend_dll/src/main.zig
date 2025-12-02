@@ -1,7 +1,7 @@
 //! Azki Frontend DLL - Windows TSF Text Input Processor
 //!
-//! Phase 1: "Hollow" DLL - Register as a valid TIP in Windows Registry
-//! Goal: DLL appears in language bar, host apps don't crash
+//! Phase 1: "Hollow" DLL - Register as a valid TIP in Windows.
+//! Goal: DLL appears in language bar, host apps don't crash.
 
 const std = @import("std");
 const w = @import("win32.zig");

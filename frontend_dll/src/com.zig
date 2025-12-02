@@ -29,30 +29,9 @@ pub const IID_IClassFactory = w.GUID{
 // Utility Functions
 //=============================================================================
 
-/// Compare two GUIDs for equality
+/// Compare two GUIDs for equality (wrapper for w.GUID.eql)
 pub fn isEqualGUID(a: *const w.GUID, b: *const w.GUID) bool {
-    return a.Data1 == b.Data1 and
-        a.Data2 == b.Data2 and
-        a.Data3 == b.Data3 and
-        std.mem.eql(u8, &a.Data4, &b.Data4);
-}
-
-/// Format GUID as registry string "{xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}"
-pub fn guidToString(guid: *const w.GUID, buf: []u8) []const u8 {
-    const result = std.fmt.bufPrint(buf, "{{{X:0>8}-{X:0>4}-{X:0>4}-{X:0>2}{X:0>2}-{X:0>2}{X:0>2}{X:0>2}{X:0>2}{X:0>2}{X:0>2}}}", .{
-        guid.Data1,
-        guid.Data2,
-        guid.Data3,
-        guid.Data4[0],
-        guid.Data4[1],
-        guid.Data4[2],
-        guid.Data4[3],
-        guid.Data4[4],
-        guid.Data4[5],
-        guid.Data4[6],
-        guid.Data4[7],
-    }) catch return "";
-    return result;
+    return a.eql(b);
 }
 
 //=============================================================================

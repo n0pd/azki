@@ -1,10 +1,10 @@
-//! Global variables and constants for Azki IME
+//! Azki IME Global Variables and Constants
 
 const std = @import("std");
 const w = @import("win32.zig");
 
 //=============================================================================
-// GUIDs
+// Azki-specific GUIDs
 //=============================================================================
 
 /// CLSID for Azki Text Input Processor
@@ -26,16 +26,10 @@ pub const GUID_AzkiProfile = w.GUID{
 };
 
 //=============================================================================
-// TSF Category GUIDs
+// TSF Category GUIDs (re-exported from win32)
 //=============================================================================
 
-/// GUID_TFCAT_TIP_KEYBOARD - Keyboard Text Input Processor category
-pub const GUID_TFCAT_TIP_KEYBOARD = w.GUID{
-    .Data1 = 0x34745C63,
-    .Data2 = 0xB2F0,
-    .Data3 = 0x4784,
-    .Data4 = .{ 0x8B, 0x67, 0x5E, 0x12, 0xC8, 0x70, 0x1A, 0x31 },
-};
+pub const GUID_TFCAT_TIP_KEYBOARD = w.GUID_TFCAT_TIP_KEYBOARD;
 
 //=============================================================================
 // Language Constants
@@ -43,12 +37,6 @@ pub const GUID_TFCAT_TIP_KEYBOARD = w.GUID{
 
 /// Language ID for Japanese (ja-JP)
 pub const LANGID_JAPANESE: u16 = 0x0411;
-
-/// Primary language ID
-pub const LANG_JAPANESE: u16 = 0x11;
-
-/// Sublanguage ID
-pub const SUBLANG_JAPANESE_JAPAN: u16 = 0x01;
 
 //=============================================================================
 // Display Strings
