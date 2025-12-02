@@ -210,7 +210,7 @@ pub fn unregisterTIP() w.HRESULT {
 pub fn registerCategories() w.HRESULT {
     // Initialize COM - S_OK means initialized, S_FALSE means already initialized (both OK)
     const initHr = w.CoInitializeEx(null, w.COINIT_APARTMENTTHREADED);
-    if (w.FAILED(initHr)) {
+    if (w.FAILED(initHr) and initHr != w.RPC_E_CHANGED_MODE) {
         return initHr;
     }
     defer w.CoUninitialize();
