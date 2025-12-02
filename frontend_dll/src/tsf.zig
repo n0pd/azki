@@ -117,7 +117,7 @@ pub const TextInputProcessor = struct {
             }
             
             // Try to atomically replace current with current-1 if value unchanged
-            const exchange_result = @cmpxchgWeak(u32, &self.ref_count, current, current - 1, .seq_cst, .seq_cst);
+            const exchange_result = @cmpxchgStrong(u32, &self.ref_count, current, current - 1, .seq_cst, .seq_cst);
             if (exchange_result == null) {
                 // Successfully decremented
                 const count = current - 1;
