@@ -114,14 +114,12 @@ const TEXTSERVICE_DESC_W: [*:0]const u16 = std.unicode.utf8ToUtf16LeStringLitera
 
 /// Register as Text Input Processor using ITfInputProcessorProfiles
 pub fn registerTIP() w.HRESULT {
-    // Initialize COM - S_OK means initialized, S_FALSE means already initialized
-    // RPC_E_CHANGED_MODE means COM is initialized with different threading model (still OK to proceed)
+    // Initialize COM - S_OK means initialized, S_FALSE means already initialized (both OK)
     const initHr = w.CoInitializeEx(null, w.COINIT_APARTMENTTHREADED);
-    const shouldUninit = initHr == w.S_OK;
-    if (w.FAILED(initHr) and initHr != w.RPC_E_CHANGED_MODE) {
+    if (w.FAILED(initHr)) {
         return initHr;
     }
-    defer if (shouldUninit) w.CoUninitialize();
+    defer w.CoUninitialize();
 
     // Create ITfInputProcessorProfiles instance
     var pProfiles: ?*w.ITfInputProcessorProfiles = null;
@@ -176,14 +174,12 @@ pub fn registerTIP() w.HRESULT {
 
 /// Unregister TIP using ITfInputProcessorProfiles
 pub fn unregisterTIP() w.HRESULT {
-    // Initialize COM - S_OK means initialized, S_FALSE means already initialized
-    // RPC_E_CHANGED_MODE means COM is initialized with different threading model (still OK to proceed)
+    // Initialize COM - S_OK means initialized, S_FALSE means already initialized (both OK)
     const initHr = w.CoInitializeEx(null, w.COINIT_APARTMENTTHREADED);
-    const shouldUninit = initHr == w.S_OK;
-    if (w.FAILED(initHr) and initHr != w.RPC_E_CHANGED_MODE) {
+    if (w.FAILED(initHr)) {
         return initHr;
     }
-    defer if (shouldUninit) w.CoUninitialize();
+    defer w.CoUninitialize();
 
     // Create ITfInputProcessorProfiles instance
     var pProfiles: ?*w.ITfInputProcessorProfiles = null;
@@ -212,14 +208,12 @@ pub fn unregisterTIP() w.HRESULT {
 
 /// Register TSF categories using ITfCategoryMgr
 pub fn registerCategories() w.HRESULT {
-    // Initialize COM - S_OK means initialized, S_FALSE means already initialized
-    // RPC_E_CHANGED_MODE means COM is initialized with different threading model (still OK to proceed)
+    // Initialize COM - S_OK means initialized, S_FALSE means already initialized (both OK)
     const initHr = w.CoInitializeEx(null, w.COINIT_APARTMENTTHREADED);
-    const shouldUninit = initHr == w.S_OK;
-    if (w.FAILED(initHr) and initHr != w.RPC_E_CHANGED_MODE) {
+    if (w.FAILED(initHr)) {
         return initHr;
     }
-    defer if (shouldUninit) w.CoUninitialize();
+    defer w.CoUninitialize();
 
     // Create ITfCategoryMgr instance
     var pCategoryMgr: ?*w.ITfCategoryMgr = null;
@@ -248,14 +242,12 @@ pub fn registerCategories() w.HRESULT {
 
 /// Unregister TSF categories
 pub fn unregisterCategories() w.HRESULT {
-    // Initialize COM - S_OK means initialized, S_FALSE means already initialized
-    // RPC_E_CHANGED_MODE means COM is initialized with different threading model (still OK to proceed)
+    // Initialize COM - S_OK means initialized, S_FALSE means already initialized (both OK)
     const initHr = w.CoInitializeEx(null, w.COINIT_APARTMENTTHREADED);
-    const shouldUninit = initHr == w.S_OK;
-    if (w.FAILED(initHr) and initHr != w.RPC_E_CHANGED_MODE) {
+    if (w.FAILED(initHr)) {
         return initHr;
     }
-    defer if (shouldUninit) w.CoUninitialize();
+    defer w.CoUninitialize();
 
     // Create ITfCategoryMgr instance
     var pCategoryMgr: ?*w.ITfCategoryMgr = null;
