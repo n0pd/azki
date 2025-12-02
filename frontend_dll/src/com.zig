@@ -115,7 +115,7 @@ pub const ClassFactory = struct {
                 @panic("ClassFactory::Release called with ref_count == 0 (double release)");
             }
             
-            // Try to atomically swap current with current-1
+            // Try to atomically replace current with current-1 if value unchanged
             const exchange_result = @cmpxchgWeak(u32, &self.ref_count, current, current - 1, .seq_cst, .seq_cst);
             if (exchange_result == null) {
                 // Successfully decremented
