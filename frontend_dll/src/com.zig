@@ -108,26 +108,21 @@ pub const ClassFactory = struct {
     pub fn release(this: **const VTable) callconv(w.WINAPI) u32 {
         const self = getSelf(this);
         
-        // Atomically decrement ref_count using compare-and-swap loop to avoid TOCTOU races
-        while (true) {
-            const current = @atomicLoad(u32, &self.ref_count, .seq_cst);
-            if (current == 0) {
-                @panic("ClassFactory::Release called with ref_count == 0 (double release)");
-            }
-            
-            // Try to atomically replace current with current-1 if value unchanged
-            const exchange_result = @cmpxchgStrong(u32, &self.ref_count, current, current - 1, .seq_cst, .seq_cst);
-            if (exchange_result == null) {
-                // Successfully decremented
-                const count = current - 1;
-                if (count == 0) {
-                    std.heap.page_allocator.destroy(self);
-                    globals.dllRelease();
-                }
-                return count;
-            }
-            // CAS failed, retry with new value
+        // Atomically decrement ref_count
+        const prev = @atomicRmw(u32, &self.ref_count, .Sub, 1, .seq_cst);
+        const count = prev - 1;
+        
+        // Debug assertion: detect double-release bugs
+        // Note: If prev was 0, count wrapped to max u32. This is a serious bug.
+        if (prev == 0) {
+            @panic("ClassFactory::Release called with ref_count == 0 (double release)");
         }
+        
+        if (count == 0) {
+            std.heap.page_allocator.destroy(self);
+            globals.dllRelease();
+        }
+        return count;
     }
 
     /// IClassFactory::CreateInstance
