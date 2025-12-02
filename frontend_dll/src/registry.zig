@@ -114,8 +114,11 @@ const TEXTSERVICE_DESC_W: [*:0]const u16 = std.unicode.utf8ToUtf16LeStringLitera
 
 /// Register as Text Input Processor using ITfInputProcessorProfiles
 pub fn registerTIP() w.HRESULT {
-    // Initialize COM
-    _ = w.CoInitializeEx(null, w.COINIT_APARTMENTTHREADED);
+    // Initialize COM - S_OK means initialized, S_FALSE means already initialized (both OK)
+    const initHr = w.CoInitializeEx(null, w.COINIT_APARTMENTTHREADED);
+    if (w.FAILED(initHr)) {
+        return initHr;
+    }
     defer w.CoUninitialize();
 
     // Create ITfInputProcessorProfiles instance
@@ -128,14 +131,14 @@ pub fn registerTIP() w.HRESULT {
         @ptrCast(&pProfiles),
     );
 
-    if (hr != w.S_OK or pProfiles == null) {
-        return w.E_FAIL;
+    if (w.FAILED(hr) or pProfiles == null) {
+        return if (w.FAILED(hr)) hr else w.E_FAIL;
     }
     defer _ = pProfiles.?.release();
 
     // Register the TIP
     hr = pProfiles.?.register(&globals.CLSID_AzkiTextService);
-    if (hr != w.S_OK) {
+    if (w.FAILED(hr)) {
         return hr;
     }
 
@@ -156,7 +159,7 @@ pub fn registerTIP() w.HRESULT {
         0,
     );
 
-    if (hr != w.S_OK) {
+    if (w.FAILED(hr)) {
         // Cleanup on failure
         _ = pProfiles.?.unregister(&globals.CLSID_AzkiTextService);
         return hr;
@@ -167,8 +170,11 @@ pub fn registerTIP() w.HRESULT {
 
 /// Unregister TIP using ITfInputProcessorProfiles
 pub fn unregisterTIP() w.HRESULT {
-    // Initialize COM
-    _ = w.CoInitializeEx(null, w.COINIT_APARTMENTTHREADED);
+    // Initialize COM - S_OK means initialized, S_FALSE means already initialized (both OK)
+    const initHr = w.CoInitializeEx(null, w.COINIT_APARTMENTTHREADED);
+    if (w.FAILED(initHr)) {
+        return initHr;
+    }
     defer w.CoUninitialize();
 
     // Create ITfInputProcessorProfiles instance
@@ -181,8 +187,8 @@ pub fn unregisterTIP() w.HRESULT {
         @ptrCast(&pProfiles),
     );
 
-    if (hr != w.S_OK or pProfiles == null) {
-        return w.E_FAIL;
+    if (w.FAILED(hr) or pProfiles == null) {
+        return if (w.FAILED(hr)) hr else w.E_FAIL;
     }
     defer _ = pProfiles.?.release();
 
@@ -198,8 +204,11 @@ pub fn unregisterTIP() w.HRESULT {
 
 /// Register TSF categories using ITfCategoryMgr
 pub fn registerCategories() w.HRESULT {
-    // Initialize COM
-    _ = w.CoInitializeEx(null, w.COINIT_APARTMENTTHREADED);
+    // Initialize COM - S_OK means initialized, S_FALSE means already initialized (both OK)
+    const initHr = w.CoInitializeEx(null, w.COINIT_APARTMENTTHREADED);
+    if (w.FAILED(initHr)) {
+        return initHr;
+    }
     defer w.CoUninitialize();
 
     // Create ITfCategoryMgr instance
@@ -212,8 +221,8 @@ pub fn registerCategories() w.HRESULT {
         @ptrCast(&pCategoryMgr),
     );
 
-    if (hr != w.S_OK or pCategoryMgr == null) {
-        return w.E_FAIL;
+    if (w.FAILED(hr) or pCategoryMgr == null) {
+        return if (w.FAILED(hr)) hr else w.E_FAIL;
     }
     defer _ = pCategoryMgr.?.release();
 
@@ -229,8 +238,11 @@ pub fn registerCategories() w.HRESULT {
 
 /// Unregister TSF categories
 pub fn unregisterCategories() w.HRESULT {
-    // Initialize COM
-    _ = w.CoInitializeEx(null, w.COINIT_APARTMENTTHREADED);
+    // Initialize COM - S_OK means initialized, S_FALSE means already initialized (both OK)
+    const initHr = w.CoInitializeEx(null, w.COINIT_APARTMENTTHREADED);
+    if (w.FAILED(initHr)) {
+        return initHr;
+    }
     defer w.CoUninitialize();
 
     // Create ITfCategoryMgr instance
@@ -243,8 +255,8 @@ pub fn unregisterCategories() w.HRESULT {
         @ptrCast(&pCategoryMgr),
     );
 
-    if (hr != w.S_OK or pCategoryMgr == null) {
-        return w.E_FAIL;
+    if (w.FAILED(hr) or pCategoryMgr == null) {
+        return if (w.FAILED(hr)) hr else w.E_FAIL;
     }
     defer _ = pCategoryMgr.?.release();
 

@@ -40,6 +40,17 @@ pub const E_OUTOFMEMORY: HRESULT = @bitCast(@as(u32, 0x8007000E));
 pub const CLASS_E_CLASSNOTAVAILABLE: HRESULT = @bitCast(@as(u32, 0x80040111));
 pub const CLASS_E_NOAGGREGATION: HRESULT = @bitCast(@as(u32, 0x80040110));
 pub const SELFREG_E_CLASS: HRESULT = @bitCast(@as(u32, 0x80040201));
+pub const RPC_E_CHANGED_MODE: HRESULT = @bitCast(@as(u32, 0x80010106));
+
+/// Check if HRESULT indicates success (S_OK or S_FALSE)
+pub inline fn SUCCEEDED(hr: HRESULT) bool {
+    return hr >= 0;
+}
+
+/// Check if HRESULT indicates failure
+pub inline fn FAILED(hr: HRESULT) bool {
+    return hr < 0;
+}
 
 // Registry
 pub const HKEY_CLASSES_ROOT: HKEY = @ptrFromInt(0x80000000);

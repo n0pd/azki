@@ -27,7 +27,7 @@ pub const DLL_THREAD_ATTACH = root.DLL_THREAD_ATTACH;
 pub const DLL_THREAD_DETACH = root.DLL_THREAD_DETACH;
 pub const DLL_PROCESS_DETACH = root.DLL_PROCESS_DETACH;
 
-// HRESULT 値
+// HRESULT values
 pub const S_OK = root.S_OK;
 pub const S_FALSE = root.S_FALSE;
 pub const E_FAIL = root.E_FAIL;
@@ -37,8 +37,11 @@ pub const E_OUTOFMEMORY = root.E_OUTOFMEMORY;
 pub const CLASS_E_CLASSNOTAVAILABLE = root.CLASS_E_CLASSNOTAVAILABLE;
 pub const CLASS_E_NOAGGREGATION = root.CLASS_E_NOAGGREGATION;
 pub const SELFREG_E_CLASS = root.SELFREG_E_CLASS;
+pub const RPC_E_CHANGED_MODE = root.RPC_E_CHANGED_MODE;
+pub const SUCCEEDED = root.SUCCEEDED;
+pub const FAILED = root.FAILED;
 
-// レジストリ定数
+// Registry constants
 pub const HKEY_CLASSES_ROOT = root.HKEY_CLASSES_ROOT;
 pub const HKEY_LOCAL_MACHINE = root.HKEY_LOCAL_MACHINE;
 pub const KEY_ALL_ACCESS = root.KEY_ALL_ACCESS;

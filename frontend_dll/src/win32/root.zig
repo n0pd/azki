@@ -34,8 +34,11 @@ pub const E_OUTOFMEMORY = base.E_OUTOFMEMORY;
 pub const CLASS_E_CLASSNOTAVAILABLE = base.CLASS_E_CLASSNOTAVAILABLE;
 pub const CLASS_E_NOAGGREGATION = base.CLASS_E_NOAGGREGATION;
 pub const SELFREG_E_CLASS = base.SELFREG_E_CLASS;
+pub const RPC_E_CHANGED_MODE = base.RPC_E_CHANGED_MODE;
+pub const SUCCEEDED = base.SUCCEEDED;
+pub const FAILED = base.FAILED;
 
-// レジストリ定数
+// Registry constants
 pub const HKEY_CLASSES_ROOT = base.HKEY_CLASSES_ROOT;
 pub const HKEY_LOCAL_MACHINE = base.HKEY_LOCAL_MACHINE;
 pub const KEY_ALL_ACCESS = base.KEY_ALL_ACCESS;

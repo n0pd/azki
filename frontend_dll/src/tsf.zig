@@ -108,6 +108,12 @@ pub const TextInputProcessor = struct {
     /// IUnknown::Release
     pub fn release(this: **const VTable) callconv(w.WINAPI) u32 {
         const self = getSelf(this);
+
+        // Prevent underflow - debug assertion for double-release bugs
+        if (self.ref_count == 0) {
+            @panic("TextInputProcessor::Release called with ref_count == 0 (double release)");
+        }
+
         self.ref_count -= 1;
         const count = self.ref_count;
         if (count == 0) {

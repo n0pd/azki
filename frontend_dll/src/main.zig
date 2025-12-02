@@ -85,6 +85,6 @@ pub export fn DllUnregisterServer() callconv(w.WINAPI) w.HRESULT {
 //=============================================================================
 
 test "GUID constants are valid" {
-    try std.testing.expect(globals.CLSID_AzkiTextService.Data1 == 0xE8B5A12D);
+    try std.testing.expect(globals.CLSID_AzkiTextService.Data1 == 0x7B133824);
     try std.testing.expect(globals.GUID_AzkiProfile.Data1 == 0xF1A2B3C4);
 }
