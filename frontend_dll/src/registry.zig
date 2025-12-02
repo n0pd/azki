@@ -119,7 +119,8 @@ pub fn registerTIP() w.HRESULT {
     if (w.FAILED(initHr)) {
         return initHr;
     }
-    defer w.CoUninitialize();
+    const shouldUninit = initHr == w.S_OK;
+    defer if (shouldUninit) w.CoUninitialize();
 
     // Create ITfInputProcessorProfiles instance
     var pProfiles: ?*w.ITfInputProcessorProfiles = null;
