@@ -146,7 +146,7 @@ struct ImeResponse {
 
   * **Goal:** Register the DLL as a valid Text Input Processor (TIP) in Windows Registry.
   * **Task:** Implement `DllRegisterServer` and `ITfTextInputProcessor` stubs.
-  * **Success Criteria:** Notepad opens without crashing, and "MySKK" appears in the language bar.
+  * **Success Criteria:** Notepad opens without crashing, and "Azki" appears in the language bar.
 
 ### Phase 2: The Pipeline (IPC)
 
