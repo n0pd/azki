@@ -114,12 +114,14 @@ const TEXTSERVICE_DESC_W: [*:0]const u16 = std.unicode.utf8ToUtf16LeStringLitera
 
 /// Register as Text Input Processor using ITfInputProcessorProfiles
 pub fn registerTIP() w.HRESULT {
-    // Initialize COM - S_OK means initialized, S_FALSE means already initialized (both OK)
+    // Initialize COM - S_OK means initialized, S_FALSE means already initialized
+    // Only uninitialize if we actually initialized (S_OK), not if already init'd (S_FALSE)
     const initHr = w.CoInitializeEx(null, w.COINIT_APARTMENTTHREADED);
-    if (w.FAILED(initHr)) {
+    const shouldUninit = initHr == w.S_OK;
+    if (w.FAILED(initHr) and initHr != w.RPC_E_CHANGED_MODE) {
         return initHr;
     }
-    defer w.CoUninitialize();
+    defer if (shouldUninit) w.CoUninitialize();
 
     // Create ITfInputProcessorProfiles instance
     var pProfiles: ?*w.ITfInputProcessorProfiles = null;
@@ -174,12 +176,14 @@ pub fn registerTIP() w.HRESULT {
 
 /// Unregister TIP using ITfInputProcessorProfiles
 pub fn unregisterTIP() w.HRESULT {
-    // Initialize COM - S_OK means initialized, S_FALSE means already initialized (both OK)
+    // Initialize COM - S_OK means initialized, S_FALSE means already initialized
+    // Only uninitialize if we actually initialized (S_OK), not if already init'd (S_FALSE)
     const initHr = w.CoInitializeEx(null, w.COINIT_APARTMENTTHREADED);
-    if (w.FAILED(initHr)) {
+    const shouldUninit = initHr == w.S_OK;
+    if (w.FAILED(initHr) and initHr != w.RPC_E_CHANGED_MODE) {
         return initHr;
     }
-    defer w.CoUninitialize();
+    defer if (shouldUninit) w.CoUninitialize();
 
     // Create ITfInputProcessorProfiles instance
     var pProfiles: ?*w.ITfInputProcessorProfiles = null;
@@ -208,12 +212,14 @@ pub fn unregisterTIP() w.HRESULT {
 
 /// Register TSF categories using ITfCategoryMgr
 pub fn registerCategories() w.HRESULT {
-    // Initialize COM - S_OK means initialized, S_FALSE means already initialized (both OK)
+    // Initialize COM - S_OK means initialized, S_FALSE means already initialized
+    // Only uninitialize if we actually initialized (S_OK), not if already init'd (S_FALSE)
     const initHr = w.CoInitializeEx(null, w.COINIT_APARTMENTTHREADED);
-    if (w.FAILED(initHr)) {
+    const shouldUninit = initHr == w.S_OK;
+    if (w.FAILED(initHr) and initHr != w.RPC_E_CHANGED_MODE) {
         return initHr;
     }
-    defer w.CoUninitialize();
+    defer if (shouldUninit) w.CoUninitialize();
 
     // Create ITfCategoryMgr instance
     var pCategoryMgr: ?*w.ITfCategoryMgr = null;
@@ -242,12 +248,14 @@ pub fn registerCategories() w.HRESULT {
 
 /// Unregister TSF categories
 pub fn unregisterCategories() w.HRESULT {
-    // Initialize COM - S_OK means initialized, S_FALSE means already initialized (both OK)
+    // Initialize COM - S_OK means initialized, S_FALSE means already initialized
+    // Only uninitialize if we actually initialized (S_OK), not if already init'd (S_FALSE)
     const initHr = w.CoInitializeEx(null, w.COINIT_APARTMENTTHREADED);
-    if (w.FAILED(initHr)) {
+    const shouldUninit = initHr == w.S_OK;
+    if (w.FAILED(initHr) and initHr != w.RPC_E_CHANGED_MODE) {
         return initHr;
     }
-    defer w.CoUninitialize();
+    defer if (shouldUninit) w.CoUninitialize();
 
     // Create ITfCategoryMgr instance
     var pCategoryMgr: ?*w.ITfCategoryMgr = null;
