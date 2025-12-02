@@ -35,7 +35,10 @@ pub export fn DllMain(
 
 /// Check if DLL can be unloaded
 pub export fn DllCanUnloadNow() callconv(w.WINAPI) w.HRESULT {
-    return if (globals.g_cDllRef == 0 and globals.g_cServerLocks == 0)
+    // Use atomic loads for consistency with atomic operations in dllAddRef/dllRelease
+    const dllRef = @atomicLoad(u32, &globals.g_cDllRef, .seq_cst);
+    const serverLocks = @atomicLoad(u32, &globals.g_cServerLocks, .seq_cst);
+    return if (dllRef == 0 and serverLocks == 0)
         w.S_OK
     else
         w.S_FALSE;
