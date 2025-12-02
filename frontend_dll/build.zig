@@ -1,11 +1,14 @@
 const std = @import("std");
 
 pub fn build(b: *std.Build) void {
+    // Allow ABI selection via build option. Default to MSVC for COM/TSF compatibility.
+    // Use: zig build -Dabi=gnu to build with MinGW ABI (experimental).
+    const abi_option = b.option(std.builtin.Abi, "abi", "Target ABI (msvc or gnu). Default: msvc") orelse .msvc;
     const target = b.standardTargetOptions(.{
         .default_target = .{
             .cpu_arch = .x86_64,
             .os_tag = .windows,
-            .abi = .msvc,
+            .abi = abi_option,
         },
     });
     const optimize = b.standardOptimizeOption(.{});
