@@ -65,27 +65,39 @@ pub fn registerCLSID() w.HRESULT {
 
     // Create CLSID key with description
     if (createKeyWithValue(w.HKEY_CLASSES_ROOT, clsidKey, "Azki Text Service") != w.S_OK) {
+        // Cleanup: delete CLSID key if subsequent operations fail
+        _ = w.RegDeleteKeyA(w.HKEY_CLASSES_ROOT, clsidKey);
         return w.E_FAIL;
     }
 
     // CLSID\{guid}\InprocServer32
     var serverKeyPath: [160]u8 = undefined;
-    const serverKey = std.fmt.bufPrintZ(&serverKeyPath, "CLSID\\{s}\\InprocServer32", .{clsidStr}) catch return w.E_FAIL;
+    const serverKey = std.fmt.bufPrintZ(&serverKeyPath, "CLSID\\{s}\\InprocServer32", .{clsidStr}) catch {
+        // Cleanup: delete CLSID key if subsequent operations fail
+        _ = w.RegDeleteKeyA(w.HKEY_CLASSES_ROOT, clsidKey);
+        return w.E_FAIL;
+    };
 
     var hKey: w.HKEY = undefined;
     if (w.RegCreateKeyExA(w.HKEY_CLASSES_ROOT, serverKey, 0, null, 0, w.KEY_ALL_ACCESS, null, &hKey, null) != w.ERROR_SUCCESS) {
+        // Cleanup: delete CLSID key if subsequent operations fail
+        _ = w.RegDeleteKeyA(w.HKEY_CLASSES_ROOT, clsidKey);
         return w.E_FAIL;
     }
     defer _ = w.RegCloseKey(hKey);
 
     // Set default value (DLL path)
     if (w.RegSetValueExA(hKey, null, 0, w.REG_SZ, @ptrCast(&pathZ), @intCast(path.len + 1)) != w.ERROR_SUCCESS) {
+        // Cleanup: delete CLSID key if subsequent operations fail
+        _ = w.RegDeleteKeyA(w.HKEY_CLASSES_ROOT, clsidKey);
         return w.E_FAIL;
     }
 
     // Set ThreadingModel
     const threadModel = "Apartment";
     if (w.RegSetValueExA(hKey, "ThreadingModel", 0, w.REG_SZ, threadModel, @intCast(threadModel.len + 1)) != w.ERROR_SUCCESS) {
+        // Cleanup: delete CLSID key if subsequent operations fail
+        _ = w.RegDeleteKeyA(w.HKEY_CLASSES_ROOT, clsidKey);
         return w.E_FAIL;
     }
 
