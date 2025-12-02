@@ -148,7 +148,11 @@ pub fn registerTIP() w.HRESULT {
     };
     // Get DLL path for icon
     var dllPathW: [w.MAX_PATH]u16 = undefined;
-    const pathW = getDllPathW(&dllPathW) orelse return w.E_FAIL;
+    const pathW = getDllPathW(&dllPathW) orelse {
+        // Cleanup on failure
+        _ = pProfiles.?.unregister(&globals.CLSID_AzkiTextService);
+        return w.E_FAIL;
+    };
     dllPathW[pathW.len] = 0; // Null terminate
 
     // Add language profile for Japanese (0x0411)

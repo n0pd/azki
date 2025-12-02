@@ -100,21 +100,24 @@ pub const ClassFactory = struct {
     /// IUnknown::AddRef
     fn addRef(this: **const VTable) callconv(w.WINAPI) u32 {
         const self = getSelf(this);
-        const prev = @atomicRmw(u32, &self.ref_count, .Add, 1, .SeqCst);
+        const prev = @atomicRmw(u32, &self.ref_count, .Add, 1, .seq_cst);
         return prev + 1;
     }
 
     /// IUnknown::Release
     pub fn release(this: **const VTable) callconv(w.WINAPI) u32 {
         const self = getSelf(this);
-        const prev = @atomicRmw(u32, &self.ref_count, .Sub, 1, .SeqCst);
+        
+        // Atomically decrement ref_count
+        const prev = @atomicRmw(u32, &self.ref_count, .Sub, 1, .seq_cst);
         const count = prev - 1;
-        if (self.ref_count == 0) {
+        
+        // Debug assertion: detect double-release bugs
+        // Note: If prev was 0, count wrapped to max u32. This is a serious bug.
+        if (prev == 0) {
             @panic("ClassFactory::Release called with ref_count == 0 (double release)");
         }
-
-        self.ref_count -= 1;
-        const count = self.ref_count;
+        
         if (count == 0) {
             std.heap.page_allocator.destroy(self);
             globals.dllRelease();
