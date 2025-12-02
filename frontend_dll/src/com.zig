@@ -111,6 +111,8 @@ pub const ClassFactory = struct {
         
         // Prevent underflow - debug assertion for double-release bugs
         if (prev == 0) {
+            // Undo the underflow to keep object in consistent state
+            _ = @atomicRmw(u32, &self.ref_count, .Add, 1, .seq_cst);
             @panic("ClassFactory::Release called with ref_count == 0 (double release)");
         }
 
