@@ -108,21 +108,26 @@ pub const ClassFactory = struct {
     pub fn release(this: **const VTable) callconv(w.WINAPI) u32 {
         const self = getSelf(this);
         
-        // Debug check for double-release bugs
-        // Note: There's a theoretical TOCTOU race here, but if multiple threads
-        // are releasing without proper synchronization, that's already a bug.
-        const current = @atomicLoad(u32, &self.ref_count, .seq_cst);
-        if (current == 0) {
-            @panic("ClassFactory::Release called with ref_count == 0 (double release)");
+        // Atomically decrement ref_count using compare-and-swap loop to avoid TOCTOU races
+        while (true) {
+            const current = @atomicLoad(u32, &self.ref_count, .seq_cst);
+            if (current == 0) {
+                @panic("ClassFactory::Release called with ref_count == 0 (double release)");
+            }
+            
+            // Try to atomically swap current with current-1
+            const exchange_result = @cmpxchgWeak(u32, &self.ref_count, current, current - 1, .seq_cst, .seq_cst);
+            if (exchange_result == null) {
+                // Successfully decremented
+                const count = current - 1;
+                if (count == 0) {
+                    std.heap.page_allocator.destroy(self);
+                    globals.dllRelease();
+                }
+                return count;
+            }
+            // CAS failed, retry with new value
         }
-        
-        const prev = @atomicRmw(u32, &self.ref_count, .Sub, 1, .seq_cst);
-        const count = prev - 1;
-        if (count == 0) {
-            std.heap.page_allocator.destroy(self);
-            globals.dllRelease();
-        }
-        return count;
     }
 
     /// IClassFactory::CreateInstance
