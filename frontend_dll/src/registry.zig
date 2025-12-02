@@ -159,6 +159,7 @@ pub fn registerTIP() w.HRESULT {
         globals.LANGID_JAPANESE,
         &globals.GUID_AzkiProfile,
         TEXTSERVICE_DESC_W,
+        // NOTE: TEXTSERVICE_DESC_W must be a simple null-terminated string literal without embedded nulls.
         @intCast(std.mem.len(TEXTSERVICE_DESC_W)),
         @ptrCast(&dllPathW),
         @intCast(pathW.len),
