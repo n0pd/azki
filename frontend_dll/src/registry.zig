@@ -116,7 +116,7 @@ const TEXTSERVICE_DESC_W: [*:0]const u16 = std.unicode.utf8ToUtf16LeStringLitera
 pub fn registerTIP() w.HRESULT {
     // Initialize COM - S_OK means initialized, S_FALSE means already initialized (both OK)
     const initHr = w.CoInitializeEx(null, w.COINIT_APARTMENTTHREADED);
-    if (w.FAILED(initHr)) {
+    if (w.FAILED(initHr) and initHr != w.RPC_E_CHANGED_MODE) {
         return initHr;
     }
     const shouldUninit = initHr == w.S_OK;
