@@ -101,15 +101,17 @@ pub const TextInputProcessor = struct {
     /// IUnknown::AddRef
     fn addRef(this: **const VTable) callconv(w.WINAPI) u32 {
         const self = getSelf(this);
-        self.ref_count += 1;
-        return self.ref_count;
+        // Atomically increment ref_count
+        const prev = @atomicRmw(u32, &self.ref_count, .Add, 1, .SeqCst);
+        return prev + 1;
     }
 
     /// IUnknown::Release
     pub fn release(this: **const VTable) callconv(w.WINAPI) u32 {
         const self = getSelf(this);
-
-        // Prevent underflow - debug assertion for double-release bugs
+        // Atomically decrement ref_count
+        const prev = @atomicRmw(u32, &self.ref_count, .Sub, 1, .SeqCst);
+        const count = prev - 1;
         if (self.ref_count == 0) {
             @panic("TextInputProcessor::Release called with ref_count == 0 (double release)");
         }
