@@ -75,6 +75,16 @@ pub fn registerCLSID() w.HRESULT {
     const serverKey = std.fmt.bufPrintZ(&serverKeyPath, "CLSID\\{s}\\InprocServer32", .{clsidStr}) catch {
         // Cleanup: delete CLSID key if subsequent operations fail
         _ = w.RegDeleteKeyA(w.HKEY_CLASSES_ROOT, clsidKey);
+        // Cleanup: delete CLSID key if subsequent operations fail
+        _ = w.RegDeleteKeyA(w.HKEY_CLASSES_ROOT, clsidKey);
+        return w.E_FAIL;
+    }
+
+    // CLSID\{guid}\InprocServer32
+    var serverKeyPath: [160]u8 = undefined;
+    const serverKey = std.fmt.bufPrintZ(&serverKeyPath, "CLSID\\{s}\\InprocServer32", .{clsidStr}) catch {
+        // Cleanup: delete CLSID key if subsequent operations fail
+        _ = w.RegDeleteKeyA(w.HKEY_CLASSES_ROOT, clsidKey);
         return w.E_FAIL;
     };
 
@@ -96,6 +106,8 @@ pub fn registerCLSID() w.HRESULT {
     // Set ThreadingModel
     const threadModel = "Apartment";
     if (w.RegSetValueExA(hKey, "ThreadingModel", 0, w.REG_SZ, threadModel, @intCast(threadModel.len + 1)) != w.ERROR_SUCCESS) {
+        // Cleanup: delete CLSID key if subsequent operations fail
+        _ = w.RegDeleteKeyA(w.HKEY_CLASSES_ROOT, clsidKey);
         // Cleanup: delete CLSID key if subsequent operations fail
         _ = w.RegDeleteKeyA(w.HKEY_CLASSES_ROOT, clsidKey);
         return w.E_FAIL;
